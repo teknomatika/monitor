@@ -8,7 +8,7 @@
 			<th class="col-lg-1 text-center">No</th>
 			<th class="col-lg-2 text-center">NIS</th>
 			<th>Nama Siswa</th>
-			<th class="col-lg-2 text-center">Jurusan</th>
+			<th class="col-lg-3 text-center">Jurusan</th>
 			<th class="col-lg-2 text-center">Kelas</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
@@ -26,8 +26,8 @@
 			<td class="text-center"><?=$i++;?></td>
 			<td class="text-center"><?=$d['nis'];?></td>
 			<td><?=$d['nama'];?></td>
-			<td class="text-center"><?=$d['jurusan'];?></td>
-			<td class="text-center"><?=$d['kelas'];?></td>
+			<td class="text-center"><?=konvert('jurusan',$d['jurusan'],'nama');?></td>
+			<td class="text-center"><?=konvert('kelas',$d['kelas'],'nama');?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=siswa&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=siswa&act=hapus&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
@@ -58,17 +58,17 @@
 				$kelas = mysql_real_escape_string($_POST['kelas']);
 
 				// cari NIM
-
+				$nis = getnis($jurusan);
 				// end of cari NIM
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('jabatan',array('nama'=>$nama,'pokok'=>$pokok,'tunjangan'=>$tunjangan,'thr'=>$thr,'ubah'=>wkt()),'id="'.$id.'"');
-					eksyen('Data berhasil diubah','?p=jabatan');
+					$db->update('siswa',array('nama'=>$nama,'jk'=>$jk,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'ubah'=>wkt()),'id="'.$id.'"');
+					eksyen('Data berhasil diubah','?hal=siswa');
 				}else{
-					$db->insert('siswa',array('id'=>id(),'nama'=>$nama,'pokok'=>$pokok,'tunjangan'=>$tunjangan,'thr'=>$thr,'buat'=>wkt()));
+					$db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'buat'=>wkt()));
 					$res = $db->getResult();
-					eksyen('Data berhasil diinput','?p=jabatan');
+					eksyen('Data berhasil diinput','?hal=siswa');
 				}
 			}
 			?>

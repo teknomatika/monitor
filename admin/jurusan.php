@@ -6,6 +6,7 @@
 	<thead>
 		<tr>
 			<th class="col-lg-1 text-center">No</th>
+			<th class="col-lg-1 text-center">Kode</th>
 			<th>Nama Jurusan</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
@@ -21,6 +22,7 @@
 		?>
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
+			<td class="text-center"><?=$d['kode'];?></td>
 			<td><?=$d['nama'];?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=jurusan&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=jurusan&act=hapus&id='.$d['id']);?></td>
 		</tr>
@@ -47,13 +49,14 @@
 			if(isset($_POST['nama'])){
 				echo "Processing...";
 				$nama = $db->escapeString($_POST['nama']);
+				$kode = $db->escapeString($_POST['kode']);
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('jurusan',array('nama'=>$nama,'ubah'=>wkt()),'id="'.$id.'"');
+					$db->update('jurusan',array('nama'=>$nama,'kode'=>$kode,'ubah'=>wkt()),'id="'.$id.'"');
 					eksyen('Data berhasil diubah','?hal=jurusan');
 				}else{
-					$db->insert('jurusan',array('nama'=>$nama,'buat'=>wkt()));
+					$db->insert('jurusan',array('nama'=>$nama,'kode'=>$kode,'buat'=>wkt()));
 					$res = $db->getResult();
 					eksyen('Data berhasil diinput','?hal=jurusan');
 				}
@@ -63,6 +66,13 @@
 				<?php if(isset($_GET['id'])){ ?>
 				<input type="hidden" name="id" id="inputId" class="form-control" value="<?=$_GET['id'];?>">
 				<?php } ?>
+
+				<div class="form-group">
+					<label for="inpuKode" class="col-sm-2 control-label">Kode Jurusan :</label>
+					<div class="col-sm-3">
+						<input type="text" name="kode" id="inputKode" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['kode'];?>"<?php } ?> required="required" maxlength="5">
+					</div>
+				</div>
 
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-2 control-label">Nama Jurusan :</label>

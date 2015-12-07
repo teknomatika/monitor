@@ -9,9 +9,27 @@ function konvert($tabel,$id,$kolom){
 	return $d[$kolom];
 }
 
-function getnim(){
-	$db->select('siswa');
-	$res = $db->getResult();
+function getnis($jur){
+
+	// menentukan jumlah siswa
+	$qs = mysql_query("select id from siswa");
+	$data = mysql_fetch_array($qs);
+	$jum = mysql_num_rows($qs);
+
+	// untuk menentukan nim akhir
+	if($jum<1){
+		$id = 1;
+	}else{
+		$id = $jum+1;
+	}
+
+	// tahun
+	$thn = date('y');
+
+	// menentukan kode jurusan
+	$jur = konvert('jurusan',$jur,'kode');
+
+	return $thn.$jur.$id;	
 }
 
 function hom(){
