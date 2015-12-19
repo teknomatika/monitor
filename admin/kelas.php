@@ -6,7 +6,9 @@
 	<thead>
 		<tr>
 			<th class="col-lg-1 text-center">No</th>
-			<th>Nama Kelas</th>
+			<th class="col-lg-2 text-center">Nama Kelas</th>
+			<th>Wali Kelas</th>
+			<th class="col-lg-2 text-center">Status</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
 	</thead>
@@ -21,8 +23,10 @@
 		?>
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
-			<td><?=$d['nama'];?></td>
-			<td class="text-center"><?=tbl_ubah('?hal=kelas&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=kelas&act=hapus&id='.$d['id']);?></td>
+			<td class="text-center"><?=$d['nama'];?></td>
+			<td><?=$d['wali'];?></td>
+			<td class="text-center"><?=($d['aktif']==0) ? 'Non-Aktif' : 'Aktif';?></td>
+			<td class="text-center"><?=tbl_ubah('?hal=kelas&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=kelas&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
 	</tbody>
@@ -47,13 +51,14 @@
 			if(isset($_POST['nama'])){
 				echo "Processing...";
 				$nama = $db->escapeString($_POST['nama']);
+				$wali = $db->escapeString($_POST['wali']);
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('kelas',array('nama'=>$nama,'ubah'=>wkt()),'id="'.$id.'"');
+					$db->update('kelas',array('nama'=>$nama,'wali'=>$wali,'ubah'=>wkt()),'id="'.$id.'"');
 					eksyen('Data berhasil diubah','?hal=kelas');
 				}else{
-					$db->insert('kelas',array('nama'=>$nama,'buat'=>wkt()));
+					$db->insert('kelas',array('nama'=>$nama,'wali'=>$wali,'buat'=>wkt()));
 					$res = $db->getResult();
 					eksyen('Data berhasil diinput','?hal=kelas');
 				}
@@ -70,6 +75,13 @@
 						<input type="text" name="nama" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama'];?>"<?php } ?> required="required" maxlength="30">
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label for="inputNama" class="col-sm-2 control-label">Wali Kelas :</label>
+					<div class="col-sm-10">
+						<input type="text" name="wali" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['wali'];?>"<?php } ?> required="required" maxlength="100">
+					</div>
+				</div>
 			
 				<div class="form-group">
 					<div class="col-sm-10 col-sm-offset-2">
@@ -81,9 +93,13 @@
 			<?php break;
 
 		case 'hapus':
-			echo '<h1 class="page-header">Hapus Data Jurusan</h1>Processing...';
+			echo '<h1 class="page-header">Hapus Data Kelas</h1>Processing...';
 			$id = mysql_real_escape_string($_GET['id']);
-			$db->delete('kelas',"id='$id'"); 
+			if($_GET['a']==1){
+				$db->update('kelas',array('aktif'=>'0'),"id='$id'"); 
+			}else{
+				$db->update('kelas',array('aktif'=>'1'),"id='$id'"); 
+			}
 			$res = $db->getResult();
 			eksyen('','?hal=kelas');
 			break;

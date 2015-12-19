@@ -1,6 +1,6 @@
 <?php
 define("TITLE", "Monitoring");
-define("NAMASEKOLAH","SMK Namanya");
+define("NAMASEKOLAH","SMK YUPPENTEK 1 TANGERANG");
 date_default_timezone_set("Asia/Jakarta");
 
 function konvert($tabel,$id,$kolom){
@@ -46,8 +46,12 @@ function aktif($id){
 	}
 }
 
-function laktif($id=array()){
-
+function laktif($id){
+	if(isset($_GET['hal'])){
+		if($_GET['hal']==$id){
+			echo ' active';
+		}
+	}
 }
 
 function angka(){

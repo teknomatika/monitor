@@ -9,7 +9,7 @@
 			<th class="col-lg-2 text-center">NIS</th>
 			<th>Nama Siswa</th>
 			<th class="col-lg-3 text-center">Jurusan</th>
-			<th class="col-lg-2 text-center">Kelas</th>
+			<th class="col-lg-2 text-center">Kelas (Tapel)</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
 	</thead>
@@ -18,7 +18,7 @@
 		$i = 1;
 		$db = new Database();
 		$db->connect();
-		$db->select('siswa'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->select('siswa','*',null,null,'tapel desc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$res = $db->getResult();
 		foreach($res as $d){
 		?>
@@ -27,7 +27,7 @@
 			<td class="text-center"><?=$d['nis'];?></td>
 			<td><?=$d['nama'];?></td>
 			<td class="text-center"><?=konvert('jurusan',$d['jurusan'],'nama');?></td>
-			<td class="text-center"><?=konvert('kelas',$d['kelas'],'nama');?></td>
+			<td class="text-center"><?=konvert('kelas',$d['kelas'],'nama');?> (<?=konvert('tapel',$d['tapel'],'awal');?> / <?=konvert('tapel',$d['tapel'],'awal')+1;?>)</td>
 			<td class="text-center"><?=tbl_ubah('?hal=siswa&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=siswa&act=hapus&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
@@ -51,35 +51,75 @@
 			if(isset($_POST['nama'])){
 				echo "Processing...";
 				$nama = mysql_real_escape_string($_POST['nama']);
+				$_nis = mysql_real_escape_string($_POST['nis']);
 				$jk = mysql_real_escape_string($_POST['jk']);
 				$tempat = mysql_real_escape_string($_POST['tempat']);
 				$tanggal = mysql_real_escape_string($_POST['tanggal']);
 				$jurusan = mysql_real_escape_string($_POST['jurusan']);
 				$kelas = mysql_real_escape_string($_POST['kelas']);
+				$alamat = mysql_real_escape_string($_POST['alamat']);
+				$tapel = mysql_real_escape_string($_POST['tapel']);
 
 				// cari NIM
 				$nis = getnis($jurusan);
 				// end of cari NIM
 
+				// foto siswa
+				if($_FILES['foto']['name']!=""){				// kalau tidak kosong, maka dijalankan
+					$tmp_name  = $_FILES['foto']['tmp_name']; 	//nama local temp file di server
+				    $file_type = $_FILES['foto']['type'];
+				    $img_name = $_FILES['foto']['name'];
+				    $tipe = array("image/jpeg","image/png","image/gif");
+				        if(!in_array($file_type, $tipe)) eksyen('Improper File Type for Photo. Use JPEG/JPG/PNG/GIF only.','?=hal=siswa');
+
+			      	// hapus foto jika sudah ada
+			        $db->select('siswa','foto',NULL,"id='$id'",null);
+			        $f = $db->getResult();
+			        foreach ($f as $f) {
+			        	if($f['foto']!=""){
+			        		unlink("../images/fotosiswa/".$f['foto']);
+			        	}
+			        }
+
+			        // upload foto ke images/fotosiswa
+			        $dir = "images/fotosiswa/".$_nis."-".$img_name;
+			        if(move_uploaded_file($img_name, $dir)){
+			        	echo "<b>Upload Foto sukses!</b>";
+			        }else{
+			        	echo "<b>Upload Foto gagal!</b>";
+			        }
+				}
+
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('siswa',array('nama'=>$nama,'jk'=>$jk,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'ubah'=>wkt()),'id="'.$id.'"');
-					eksyen('Data berhasil diubah','?hal=siswa');
+					$q = $db->update('siswa',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'ubah'=>wkt()),'id="'.$id.'"');
+					if($q){
+						eksyen('Data berhasil diubah','?hal=siswa');
+					}else{
+						eksyen('Data gagal diubah','?hal=siswa');
+					}
 				}else{
-					$db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'buat'=>wkt()));
-					$res = $db->getResult();
-					eksyen('Data berhasil diinput','?hal=siswa');
+					$q = $db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'buat'=>wkt()));
+					if($q){
+						$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
+						eksyen('Data berhasil diinput','?hal=siswa');
+					}else{
+						eksyen('Data gagal diinput','?hal=siswa');
+					}
 				}
 			}
 			?>
-			<form action="" method="POST" class="form-horizontal" role="form">
+			<form action="" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
 				<?php if(isset($_GET['id'])){ ?>
 				<input type="hidden" name="id" id="inputId" class="form-control" value="<?=$_GET['id'];?>">
 				
 				<div class="form-group">
 					<label for="inputNIS" class="col-sm-2 control-label">NIS :</label>
 					<div class="col-sm-3">
-						<input type="text" name="nis" id="inputNIS" class="form-control" value="<?=$d[0]['nis'];?>" readonly>
+						<input type="text" name="nis" id="inputNIS" class="form-control" value="<?=$d[0]['nis'];?>" <?=angka();?> readonly>
+					</div>
+					<div class="col-sm-3 col-sm-offset-3">
+						<?php if(isset($_GET['id']) and $d[0]){ ?><?php } ?>
 					</div>
 				</div>
 				<?php } ?>
@@ -122,7 +162,7 @@
 				<div class="form-group">
 					<label for="inputTunjangan" class="col-sm-2 control-label">Alamat :</label>
 					<div class="col-sm-6">
-						<textarea name="alamat" id="inputAlamat" class="form-control" rows="3" required="required"></textarea>
+						<textarea name="alamat" id="inputAlamat" class="form-control" rows="3" required="required"><?php if(isset($_GET['id'])){ ?><?=$d[0]['tempat'];?><?php } ?></textarea>
 					</div>
 				</div>
 
@@ -146,13 +186,31 @@
 					<div class="col-sm-3">
 						<select name="kelas" id="inputKelas" class="form-control" required="required">
 							<?php
-							$db->select('kelas'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+							$db->select('kelas','*',null,"aktif='1'",null); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 							$jb = $db->getResult();
 							foreach($jb as $jb){
 							?>
 							<option value="<?=$jb['id'];?>" <?php if(isset($_GET['id'])){ selek($d[0]['kelas'],$jb['id']); }else{ ?>selected<?php } ?>><?=$jb['nama'];?></option>
 							<?php } ?>
 						</select>
+					</div>
+					<div class="col-sm-3">
+						<select name="tapel" id="inputKelas" class="form-control" required="required">
+							<?php
+							$db->select('tapel','*',null,"aktif='1'",'awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+							$jb = $db->getResult();
+							foreach($jb as $jb){
+							?>
+							<option value="<?=$jb['id'];?>" <?php if(isset($_GET['id'])){ selek($d[0]['tapel'],$jb['id']); }else{ ?>selected<?php } ?>><?=$jb['awal'];?> / <?=$jb['akhir'];?></option>
+							<?php } ?>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputFoto" class="col-sm-2 control-label">Foto Siswa :</label>
+					<div class="col-sm-3">
+						<input type="file" name="foto" id="inputFoto">
 					</div>
 				</div>
 			

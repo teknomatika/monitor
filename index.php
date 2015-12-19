@@ -1,6 +1,6 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <?php
-session_start();
 include 'db.php';
 include 'fungsi.php';
 $db = new Database();
@@ -29,8 +29,10 @@ $db->connect();
 		<![endif]-->
 	</head>
 	<body>
-		<div class="navbar-wrapper">
-	      <div class="container">
+	<div class="navbar-wrapper">
+      <div class="container">
+      	<header role="banner">
+  			<img id="logo-main" src="images/logo.jpg" width="100%" alt="Logo Thing main logo">
 
 	        <nav class="navbar navbar-inverse navbar-static-top">
 	          <div class="container">
@@ -41,17 +43,23 @@ $db->connect();
 	                <span class="icon-bar"></span>
 	                <span class="icon-bar"></span>
 	              </button>
-	              <a class="navbar-brand" href="."><?=NAMASEKOLAH;?></a>
+	              <!-- <a class="navbar-brand" href="."><?=NAMASEKOLAH;?></a> -->
 	            </div>
 	            <div id="navbar" class="navbar-collapse collapse">
 	              <?php if(isset($_SESSION['username'])){ ?>
 	              <ul class="nav navbar-nav">
-	                <li<?=hom();?>><a href=".">Home</a></li>
-	                <li<?=aktif('siswa');?>><a href="?hal=siswa">Siswa</a></li>
-	                <li><a href="?hal=siswa">Tata Tertib</a></li>
-	                <li><a href="?hal=siswa">Pelanggaran</a></li>
-	                <li><a href="?hal=siswa">Sanksi</a></li>
-	                <li><a href="?hal=siswa">Siswa</a></li>
+	                <li <?=hom();?>><a href=".">Home</a></li>
+	                <li <?=aktif('siswa');?>><a href="?hal=siswa">Siswa</a></li>
+	                <li <?=aktif('tatatertib');?>><a href="?hal=tatatertib">Tata Tertib</a></li>
+	                <li <?=aktif('sanksi');?>><a href="?hal=sanksi">Sanksi</a></li>
+	                <li class="dropdown<?=laktif('pelanggaran');?>">
+	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pelanggaran <span class="caret"></span></a>
+	                  <ul class="dropdown-menu">
+	                    <li><a href="?hal=pelanggaran&act=ubah">Tambah Pelanggaran</a></li>
+	                    <li><a href="?hal=pelanggaran">Data Pelanggaran</a></li>
+	                  </ul>
+	                </li>
+	                <li><a href="?hal=siswa">Penindakan</a></li>
 	                <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
@@ -66,14 +74,15 @@ $db->connect();
 	                <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Pengaturan <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
-	                    <li<?=aktif('jurusan');?>><a href="?hal=jurusan"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Jurusan</a></li>
-	                    <li<?=aktif('kelas');?>><a href="?hal=kelas"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Kelas</a></li>
+	                    <li <?=aktif('tapel');?>><a href="?hal=tapel"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Tahun Pelajaran</a></li>
+	                    <li <?=aktif('jurusan');?>><a href="?hal=jurusan"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Jurusan</a></li>
+	                    <li <?=aktif('kelas');?>><a href="?hal=kelas"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Kelas</a></li>
 	                  </ul>
 	                </li>
 	              </ul>
 	              <ul class="nav navbar-nav navbar-right">
 	                <li class="dropdown">
-	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profil <span class="caret"></span></a>
+	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?=konvert('users',$_SESSION['userid'],'nama');?> <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
 	                    <li><a href="?hal=siswa"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ubah Profil</a></li>
 	                    <li><a href="logout.php"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
@@ -92,9 +101,9 @@ $db->connect();
 	            </div>
 	          </div>
 	        </nav>
-
-	      </div>
-	    </div>
+     	</header>
+      </div>
+    </div>
 
 	    <?php
 	    if(isset($_GET['hal'])){
@@ -159,11 +168,124 @@ $db->connect();
 	        $('#tbl,#tbl2,#tbl3').DataTable({
 	                responsive: true
 	        });
+
 	        $( "#datepicker" ).datepicker({
 	        	changeYear: true,
 	        	changeMonth: true,
-	        	dateFormat: "dd M yy"
+	        	dateFormat:"yy-mm-dd"
 	        });
+
+	        // js Pelanggaran
+	        var daftarnis = [
+	        	<?php
+	        	$db = new Database();
+				$db->connect();
+				$db->select('siswa','nis');	// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+				$res = $db->getResult();
+				foreach ($res as $d) {
+					echo "\"".$d['nis']."\",";
+				}
+				?>
+	        ];
+
+	        $("#nis").autocomplete({
+	        	source: daftarnis
+	        });
+
+	        var daftartatatertib = [
+	        	<?php
+	        	$db = new Database();
+				$db->connect();
+				$db->select('tata','id');	// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+				$res = $db->getResult();
+				foreach ($res as $d) {
+					echo "\"".$d['id']."\",";
+				}
+				?>
+	        ];
+
+	        $("#idtata").autocomplete({
+	        	source: daftartatatertib
+	        });
+
+	        $("#nis").change(function(){
+			    var nis = $('#nis').val();
+			    $.ajax({
+			        url: "autonama.php",
+			        data: "nis="+nis,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#nama").val(msg);
+			        }
+			    });
+			    $.ajax({
+			        url: "autokelas.php",
+			        data: "nis="+nis,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#kelas").val(msg);
+			        }
+			    });
+			    $.ajax({
+			        url: "autojurusan.php",
+			        data: "nis="+nis,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#jurusan").val(msg);
+			        }
+			    });
+			    $.ajax({
+			        url: "autowali.php",
+			        data: "nis="+nis,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#wali").val(msg);
+			        }
+			    });
+			    $.ajax({
+			        url: "autofoto.php",
+			        data: "nis="+nis,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#foto").html(msg);
+			        }
+			    });
+			});
+
+			$("#idtata").change(function(){
+			    var idtata = $('#idtata').val();
+			    $.ajax({
+			        url: "autotatatertib.php",
+			        data: "idtata="+idtata,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#tatatertib").val(msg);
+			        }
+			    });
+			    $.ajax({
+			        url: "autopoin.php",
+			        data: "idtata="+idtata,
+			        cache: false,
+			        success: function(msg){
+			            //jika data sukses diambil dari server kita tampilkan
+			            //di <select id=kel>
+			            $("#poin").val(msg);
+			        }
+			    });
+			});
+
 	    });
 	    </script>
 	</body>

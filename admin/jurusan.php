@@ -8,6 +8,7 @@
 			<th class="col-lg-1 text-center">No</th>
 			<th class="col-lg-1 text-center">Kode</th>
 			<th>Nama Jurusan</th>
+			<th class="col-lg-2 text-center">Status</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
 	</thead>
@@ -24,7 +25,8 @@
 			<td class="text-center"><?=$i++;?></td>
 			<td class="text-center"><?=$d['kode'];?></td>
 			<td><?=$d['nama'];?></td>
-			<td class="text-center"><?=tbl_ubah('?hal=jurusan&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=jurusan&act=hapus&id='.$d['id']);?></td>
+			<td class="text-center"><?=($d['aktif']==1) ? "Aktif" : "Non-Aktif";?></td>
+			<td class="text-center"><?=tbl_ubah('?hal=jurusan&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=jurusan&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
 	</tbody>
@@ -91,9 +93,14 @@
 			<?php break;
 
 		case 'hapus':
-			echo '<h1 class="page-header">Hapus Data Jurusan</h1>Processing...';
+			echo '<h1 class="page-header">Ubah Data Jurusan</h1>Processing...';
 			$id = mysql_real_escape_string($_GET['id']);
-			$db->delete('jurusan',"id='$id'"); 
+			if($_GET['a']==1){
+				$db->update('jurusan',array('aktif'=>'0'),"id='$id'"); 
+			}else{
+				$db->update('jurusan',array('aktif'=>'1'),"id='$id'"); 
+			}
+			
 			$res = $db->getResult();
 			eksyen('','?hal=jurusan');
 			break;
