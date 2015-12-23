@@ -8,7 +8,8 @@
 			<th class="col-lg-1 text-center">No</th>
 			<th>Nama Siswa</th>
 			<th>Jenis Pelanggaran</th>
-			<th class="col-lg-2 text-center">Poin</th>
+			<th class="col-lg-1 text-center">Poin</th>
+			<th class="col-lg-2 text-center">Waktu</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
 	</thead>
@@ -17,16 +18,17 @@
 		$i = 1;
 		$db = new Database();
 		$db->connect();
-		$db->select('pelanggaran'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->select('pelanggaran','*',null,null,'tanggal desc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 		$res = $db->getResult();
 		foreach($res as $d){
 		?>
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
-			<td class="text-center"><?=$d['kode'];?></td>
-			<td><?=$d['nama'];?></td>
-			<td class="text-center"><?=($d['aktif']==1) ? "Aktif" : "Non-Aktif";?></td>
-			<td class="text-center"><?=tbl_ubah('?hal=pelanggaran&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=pelanggaran&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
+			<td class="text-center"><?=konvert2('siswa','nis',$d['idsiswa'],'nama');?></td>
+			<td><?=konvert('tata',$d['idtata'],'nama');?></td>
+			<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
+			<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=tanggal($d['tanggal']);?></td>
+			<td class="text-center"><?=tbl_ubah('?hal=pelanggaran&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=pelanggaran&act=hapus&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
 	</tbody>
@@ -37,31 +39,21 @@
 	switch ($_GET['act']) {
 		case 'ubah': ?>
 			<?php 
-			if(isset($_GET['id'])){ 
-				echo '<h1 class="page-header">Ubah Data Pelanggaran <small>| <a href="?hal=pelanggaran">Kembali</a></small></h1>';
-				$id = $_GET['id'];
-				$db->select('jurusan','*',NULL,"id='$id'",null); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
-				$jum = $db->numRows();
-				if($jum<1){ eksyen('Data tidak ditemukan','?hal=pelanggaran'); }
-				$d = $db->getResult();
-			}else{
-				echo '<h1 class="page-header">Tambah Data Pelanggaran <small>| <a href="?hal=pelanggaran">Kembali</a></small></h1>';
-			}
+			echo '<h1 class="page-header">Tambah Data Pelanggaran <small>| <a href="?hal=pelanggaran">Kembali</a></small></h1>';
 
-			if(isset($_POST['nama'])){
+			if(isset($_POST['nis'])){
 				echo "Processing...";
 				$nis = $db->escapeString($_POST['nis']);
 				$tanggal = $db->escapeString($_POST['tanggal']);
 				$idtata = $db->escapeString($_POST['idtata']);
+				$poin = $db->escapeString($_POST['poin']);
+				$waktu = "$tanggal ".date('H:i:s');
 
-				if(isset($_POST['id'])){
-					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('jurusan',array('nama'=>$nama,'kode'=>$kode,'ubah'=>wkt()),'id="'.$id.'"');
-					eksyen('Data berhasil diubah','?hal=pelanggaran');
-				}else{
-					$db->insert('pelanggaran',array('idsiswa'=>$nis,'idtata'=>$idtata,'tanggal'=>$tanggal);
-					$res = $db->getResult();
+				$q = $db->insert('pelanggaran',array('id'=>id(),'idsiswa'=>$nis,'idtata'=>$idtata,'tanggal'=>$waktu));
+				if($q){
 					eksyen('Data berhasil diinput','?hal=pelanggaran');
+				}else{
+					eksyen('Data gagal diinput','?hal=pelanggaran');
 				}
 			}
 			?>
@@ -70,6 +62,13 @@
 				<input type="hidden" name="id" id="inputId" class="form-control" value="<?=$_GET['id'];?>">
 				<?php } ?>
 			<div class="col-lg-7">
+
+				<div class="form-group">
+					<label for="inputNama" class="col-sm-3 control-label">Tanggal</label>
+					<div class="col-sm-9">
+						<input type="text" name="tanggal" id="datepicker" class="form-control" required="required" value="<?=date('Y-m-d');?>" readonly>
+					</div>
+				</div>
 
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-3 control-label">NIS</label>
@@ -107,13 +106,6 @@
 				</div>
 
 				<div class="form-group">
-					<label for="inputNama" class="col-sm-3 control-label">Tanggal</label>
-					<div class="col-sm-9">
-						<input type="text" name="tanggal" id="datepicker" class="form-control" required="required" value="<?=date('Y-m-d');?>" readonly>
-					</div>
-				</div>
-
-				<div class="form-group">
 					<label for="inputNama" class="col-sm-3 control-label">Kode Pelanggaran</label>
 					<div class="col-sm-9">
 						<div class="input-group">
@@ -133,7 +125,7 @@
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-3 control-label">Poin</label>
 					<div class="col-sm-9">
-						<input type="text" name="" id="poin" class="form-control" required="required" readonly>
+						<input type="text" name="poin" id="poin" class="form-control" required="required" readonly>
 					</div>
 				</div>
 			

@@ -1,6 +1,6 @@
 <?php if(!isset($_GET['act'])){ ?>
 <div class="col-lg-12">
-    <h1 class="page-header">Siswa <?=tbl_tambah('Input Data Siswa','?hal=siswa&act=ubah');?></h1>
+    <h1 class="page-header">Master Data Siswa <?=tbl_tambah('Input Data Siswa','?hal=siswa&act=ubah');?></h1>
 </div>
 <table class="table table-hover table-bordered" id="tbl">
 	<thead>
@@ -77,14 +77,15 @@
 			        $f = $db->getResult();
 			        foreach ($f as $f) {
 			        	if($f['foto']!=""){
-			        		unlink("../images/fotosiswa/".$f['foto']);
+			        		unlink("".$f['foto']);
 			        	}
 			        }
 
 			        // upload foto ke images/fotosiswa
 			        $dir = "images/fotosiswa/".$_nis."-".$img_name;
-			        if(move_uploaded_file($img_name, $dir)){
+			        if(move_uploaded_file($tmp_name, $dir)){
 			        	echo "<b>Upload Foto sukses!</b>";
+			        	$db->update('siswa',array('foto'=>$dir),'id="'.$id.'"');
 			        }else{
 			        	echo "<b>Upload Foto gagal!</b>";
 			        }
@@ -101,7 +102,7 @@
 				}else{
 					$q = $db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'buat'=>wkt()));
 					if($q){
-						$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
+						//$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
 						eksyen('Data berhasil diinput','?hal=siswa');
 					}else{
 						eksyen('Data gagal diinput','?hal=siswa');
@@ -110,33 +111,31 @@
 			}
 			?>
 			<form action="" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+			  <div class="col-lg-8">
 				<?php if(isset($_GET['id'])){ ?>
 				<input type="hidden" name="id" id="inputId" class="form-control" value="<?=$_GET['id'];?>">
 				
 				<div class="form-group">
 					<label for="inputNIS" class="col-sm-2 control-label">NIS :</label>
-					<div class="col-sm-3">
+					<div class="col-sm-10">
 						<input type="text" name="nis" id="inputNIS" class="form-control" value="<?=$d[0]['nis'];?>" <?=angka();?> readonly>
-					</div>
-					<div class="col-sm-3 col-sm-offset-3">
-						<?php if(isset($_GET['id']) and $d[0]){ ?><?php } ?>
 					</div>
 				</div>
 				<?php } ?>
 
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-2 control-label">Nama Siswa :</label>
-					<div class="col-sm-3">
+					<div class="col-sm-10">
 						<input type="text" name="nama" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama'];?>"<?php } ?> required="required" maxlength="25">
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="tempat" class="col-sm-2 control-label">Tempat, Tanggal Lahir :</label>
-					<div class="col-sm-3">
+					<div class="col-sm-5">
 						<input type="text" name="tempat" id="tempat" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['tempat'];?>"<?php } ?> maxlength="25" required="required">
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-5">
 						<input type="text" name="tanggal" id="datepicker" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['tanggal'];?>"<?php } ?> required="required">
 					</div>
 				</div>
@@ -161,14 +160,14 @@
 
 				<div class="form-group">
 					<label for="inputTunjangan" class="col-sm-2 control-label">Alamat :</label>
-					<div class="col-sm-6">
+					<div class="col-sm-10">
 						<textarea name="alamat" id="inputAlamat" class="form-control" rows="3" required="required"><?php if(isset($_GET['id'])){ ?><?=$d[0]['tempat'];?><?php } ?></textarea>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="inputJurusan" class="col-sm-2 control-label">Jurusan:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-10">
 						<select name="jurusan" id="inputJurusan" class="form-control" required="required">
 							<?php
 							$db->select('jurusan'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
@@ -183,7 +182,7 @@
 
 				<div class="form-group">
 					<label for="inputKelas" class="col-sm-2 control-label">Kelas:</label>
-					<div class="col-sm-3">
+					<div class="col-sm-5">
 						<select name="kelas" id="inputKelas" class="form-control" required="required">
 							<?php
 							$db->select('kelas','*',null,"aktif='1'",null); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
@@ -194,7 +193,7 @@
 							<?php } ?>
 						</select>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-sm-5">
 						<select name="tapel" id="inputKelas" class="form-control" required="required">
 							<?php
 							$db->select('tapel','*',null,"aktif='1'",'awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
@@ -209,7 +208,7 @@
 
 				<div class="form-group">
 					<label for="inputFoto" class="col-sm-2 control-label">Foto Siswa :</label>
-					<div class="col-sm-3">
+					<div class="col-sm-10">
 						<input type="file" name="foto" id="inputFoto">
 					</div>
 				</div>
@@ -220,12 +219,29 @@
 						<button type="reset" class="btn btn-default">Reset</button>
 					</div>
 				</div>
+			  </div>
+			  <div class="col-lg-4">
+			  	<?php if($d[0]['foto'] != ""){ ?>
+			  	<img src="<?=$d[0]['foto'];?>" width="50%">
+			  	<?php } ?>
+			  </div>
 			</form>
 			<?php break;
 
 		case 'hapus':
 			echo '<h1 class="page-header">Hapus Data Siswa</h1>Processing...';
 			$id = mysql_real_escape_string($_GET['id']);
+
+			// hapus foto
+			$db->select('siswa','foto',NULL,"id='$id'",null);
+	        $f = $db->getResult();
+	        foreach ($f as $f) {
+	        	if($f['foto']!=""){
+	        		unlink("".$f['foto']);
+	        	}
+	        }
+
+	        // hapus data
 			$db->delete('siswa',"id='$id'"); 
 			$res = $db->getResult();
 			eksyen('','?hal=siswa');

@@ -9,6 +9,12 @@ function konvert($tabel,$id,$kolom){
 	return $d[$kolom];
 }
 
+function konvert2($tabel,$key,$val,$kolom){
+	$q = mysql_query("select $kolom from $tabel where $key='$val'");
+	$d = mysql_fetch_array($q);
+	return $d[$kolom];
+}
+
 function getnis($jur){
 
 	// menentukan jumlah siswa
@@ -110,4 +116,60 @@ function tbl_ubah($url){
 
 function tbl_hapus($url){
 	echo '<a href="'.$url.'" class="btn btn-danger btn-xs" onClick="return confirm(\'Apakah Anda yakin akan melakukan aksi ini?\')"  alt="Hapus" title="Hapus"><i class="fa fa-trash-o fa-fw"></i></a>';
+}
+
+function tanggal($tgl){
+	$date = new DateTime($tgl);
+	return $date->format('D, d M Y');	// ('D, d M Y H:i:s');
+}
+
+function time_ago( $date )
+{
+    if( empty( $date ) )
+    {
+        return "No date provided";
+    }
+
+    $periods = array("detik", "menit", "jam", "hari", "minggu", "bulan", "tahun", "dekade");
+
+    $lengths = array("60","60","24","7","4.35","12","10");
+
+    $now = time();
+
+    $unix_date = strtotime( $date );
+
+    // check validity of date
+
+    if( empty( $unix_date ) )
+    {
+        return "Bad date";
+    }
+
+    // is it future date or past date
+
+    if( $now > $unix_date )
+    {
+        $difference = $now - $unix_date;
+        $tense = "yang lalu";
+    }
+    else
+    {
+        $difference = $unix_date - $now;
+        $tense = "dari sekarang";
+    }
+
+    for( $j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++ )
+    {
+        $difference /= $lengths[$j];
+    }
+
+    $difference = round( $difference );
+
+    if( $difference != 1 )
+    {
+        //$periods[$j].= "s";
+        $periods[$j].= "";
+    }
+
+    return "$difference $periods[$j] {$tense}";
 }

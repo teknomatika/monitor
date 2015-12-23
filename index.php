@@ -11,7 +11,7 @@ $db->connect();
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title><?=TITLE;?></title>
+		<title><?=TITLE;?> | <?=NAMASEKOLAH;?></title>
 
 		<!-- Bootstrap CSS -->
 		<link href="css/cerulean-bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,9 @@ $db->connect();
 	<div class="navbar-wrapper">
       <div class="container">
       	<header role="banner">
+      	  <?php if(isset($_GET['hal'])){ ?>
   			<img id="logo-main" src="images/logo.jpg" width="100%" alt="Logo Thing main logo">
+  		  <?php } ?>
 
 	        <nav class="navbar navbar-inverse navbar-static-top">
 	          <div class="container">
@@ -49,16 +51,10 @@ $db->connect();
 	              <?php if(isset($_SESSION['username'])){ ?>
 	              <ul class="nav navbar-nav">
 	                <li <?=hom();?>><a href=".">Home</a></li>
-	                <li <?=aktif('siswa');?>><a href="?hal=siswa">Siswa</a></li>
+	                <li <?=aktif('siswa');?>><a href="?hal=siswa">Data Siswa</a></li>
 	                <li <?=aktif('tatatertib');?>><a href="?hal=tatatertib">Tata Tertib</a></li>
 	                <li <?=aktif('sanksi');?>><a href="?hal=sanksi">Sanksi</a></li>
-	                <li class="dropdown<?=laktif('pelanggaran');?>">
-	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pelanggaran <span class="caret"></span></a>
-	                  <ul class="dropdown-menu">
-	                    <li><a href="?hal=pelanggaran&act=ubah">Tambah Pelanggaran</a></li>
-	                    <li><a href="?hal=pelanggaran">Data Pelanggaran</a></li>
-	                  </ul>
-	                </li>
+	                <li <?=aktif('pelanggaran');?>><a href="?hal=pelanggaran">Pelanggaran</a></li>
 	                <li><a href="?hal=siswa">Penindakan</a></li>
 	                <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
@@ -77,6 +73,7 @@ $db->connect();
 	                    <li <?=aktif('tapel');?>><a href="?hal=tapel"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Tahun Pelajaran</a></li>
 	                    <li <?=aktif('jurusan');?>><a href="?hal=jurusan"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Jurusan</a></li>
 	                    <li <?=aktif('kelas');?>><a href="?hal=kelas"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Kelas</a></li>
+	                    <li <?=aktif('pengguna');?>><a href="?hal=pengguna"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Master Data Pengguna</a></li>
 	                  </ul>
 	                </li>
 	              </ul>
@@ -84,7 +81,7 @@ $db->connect();
 	                <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <?=konvert('users',$_SESSION['userid'],'nama');?> <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
-	                    <li><a href="?hal=siswa"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ubah Profil</a></li>
+	                    <li><a href="?hal=profil"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Ubah Profil</a></li>
 	                    <li><a href="logout.php"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
 	                  </ul>
 	                </li>
