@@ -55,7 +55,7 @@ $db->connect();
 	                <li <?=aktif('tatatertib');?>><a href="?hal=tatatertib">Tata Tertib</a></li>
 	                <li <?=aktif('sanksi');?>><a href="?hal=sanksi">Sanksi</a></li>
 	                <li <?=aktif('pelanggaran');?><?=aktif('detail_pelanggaran');?>><a href="?hal=pelanggaran">Pelanggaran</a></li>
-	                <li <?=aktif('penindakan');?>><a href="?hal=penindakan">Penindakan <?=belumtindak();?></a></li>
+	                <li <?=aktif('penindakan');?><?=aktif('detail_peringatan');?>><a href="?hal=penindakan">Peringatan <?=belumtindak();?></a></li>
 	                <li class="dropdown">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
