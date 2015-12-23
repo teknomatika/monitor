@@ -38,7 +38,7 @@ $res = $db->getResult();
 			  <?php $i=1; foreach($res as $d){ ?>
 				<tr>
 					<td class="text-center"><?=$i;?></td>
-					<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=tanggal($d['tanggal']);?></td>
+					<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=TanggalIndo($d['tanggal']);?></td>
 					<td class="text-center">TR-0<?=$d['idtata'];?></td>
 					<td><?=konvert('tata',$d['idtata'],'nama');?></td>
 					<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
