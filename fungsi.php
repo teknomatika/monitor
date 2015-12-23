@@ -97,7 +97,8 @@ function cektindak($nis){
 		$cek = $d2['TRUE'];
 		if($cek == 1){
 			// input ke tabel tindak
-			mysql_query("insert into tindak(idsiswa,idsanksi,buat) values('$nis','$id',now())");
+			$uuid = id();
+			mysql_query("insert into tindak(id,idsiswa,idsanksi,buat) values('$uuid','$nis','$id',now())");
 		}
 	}
 }
