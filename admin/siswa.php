@@ -221,9 +221,11 @@
 				</div>
 			  </div>
 			  <div class="col-lg-4">
+			   <?php if(isset($_GET['id'])){ ?>
 			  	<?php if($d[0]['foto'] != ""){ ?>
 			  	<img src="<?=$d[0]['foto'];?>" width="50%">
 			  	<?php } ?>
+			   <?php } ?>
 			  </div>
 			</form>
 			<?php break;

@@ -27,6 +27,17 @@ $db->connect();
 			<script src="js/html5shiv.js"></script>
 			<script src="js/respond.min.js"></script>
 		<![endif]-->
+
+		<!-- jQuery -->
+		<script src="js/jquery.js"></script>
+		<script src="components/jquery-ui/jquery-ui.min.js"></script>
+		<!-- Bootstrap JavaScript -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Another JavaScript -->
+		<script src="js/isNumber.js"></script>
+		<script src="js/Chart.min.js"></script>
+		<script src="components/datatables/media/js/jquery.dataTables.min.js"></script>
+    	<script src="components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 	</head>
 	<body>
 	<div class="navbar-wrapper">
@@ -56,12 +67,12 @@ $db->connect();
 	                <li <?=aktif('sanksi');?>><a href="?hal=sanksi">Sanksi</a></li>
 	                <li <?=aktif('pelanggaran');?><?=aktif('detail_pelanggaran');?>><a href="?hal=pelanggaran">Pelanggaran</a></li>
 	                <li <?=aktif('penindakan');?><?=aktif('detail_peringatan');?>><a href="?hal=penindakan">Peringatan <?=belumtindak();?></a></li>
-	                <li class="dropdown">
+	                <li class="dropdown<?=laktif('laporan_kelas');?><?=laktif('laporan_jurusan');?><?=laktif('laporan_tingkat');?>">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
-	                    <li><a href="?hal=siswa">Kelas</a></li>
-	                    <li><a href="?hal=siswa">Jurusan</a></li>
-	                    <li><a href="?hal=siswa">Tingkat</a></li>
+	                    <li <?=aktif('laporan_kelas');?>><a href="?hal=laporan_kelas">Kelas</a></li>
+	                    <li <?=aktif('laporan_jurusan');?>><a href="?hal=laporan_jurusan">Jurusan</a></li>
+	                    <li <?=aktif('laporan_tingkat');?>><a href="?hal=laporan_tingkat">Tingkat</a></li>
 	                    <li role="separator" class="divider"></li>
 	                    <!--li class="dropdown-header">Nav header</li-->
 	                    <li><a href="?hal=siswa">Monitoring</a></li>
@@ -149,15 +160,7 @@ $db->connect();
 	    </div><!-- /.carousel -->
 	    <?php } ?>
 
-		<!-- jQuery -->
-		<script src="js/jquery.js"></script>
-		<script src="components/jquery-ui/jquery-ui.min.js"></script>
-		<!-- Bootstrap JavaScript -->
-		<script src="js/bootstrap.min.js"></script>
-		<!-- Another JavaScript -->
-		<script src="js/isNumber.js"></script>
-		<script src="components/datatables/media/js/jquery.dataTables.min.js"></script>
-    	<script src="components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
 
     	<!-- load JavaScript -->
     	<script>

@@ -24,7 +24,7 @@
 		?>
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
-			<td class="text-center"><a href="?hal=detail_pelanggaran&nis=<?=$d['idsiswa'];?>"><?=konvert2('siswa','nis',$d['idsiswa'],'nama');?></a></td>
+			<td class="text-center"><a href="?hal=detail_pelanggaran&nis=<?=$d['idsiswa'];?>&ref=<?=$_GET['hal'];?>"><?=konvert2('siswa','nis',$d['idsiswa'],'nama');?></a></td>
 			<td><?=konvert('tata',$d['idtata'],'nama');?></td>
 			<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
 			<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=TanggalIndo($d['tanggal']);?></td>

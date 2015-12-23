@@ -80,7 +80,37 @@ function cekpoin($nis){
 	// munculkan
 	$qp = mysql_query("select poin from poin where nis='$nis'");
 	$dp = mysql_fetch_array($qp);
-	return $dp['poin'];
+	if($dp){
+		return $dp['poin'];
+	}else{
+		return 0;
+	}
+}
+
+function cekpelanggaran($nis){
+	// munculkan
+	$qp = mysql_query("select count(idsiswa) as jumlah from pelanggaran where idsiswa='$nis'");
+	$dp = mysql_fetch_array($qp);
+	if($dp){
+		return $dp['jumlah'];
+	}else{
+		return 0;
+	}
+}
+
+function cekpelanggarankelas($kelas){
+	// munculkan
+	$qp = mysql_query("
+						select count(p.idsiswa) as jumlah from pelanggaran p
+						join siswa s on s.nis=p.idsiswa
+						join kelas k on k.id=s.kelas
+						where k.id='$kelas'");
+	$dp = mysql_fetch_array($qp);
+	if($dp){
+		return $dp['jumlah'];
+	}else{
+		return 0;
+	}
 }
 
 function cektindak($nis){

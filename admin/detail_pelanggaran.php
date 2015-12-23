@@ -5,12 +5,12 @@ if(!isset($_GET['nis']) or $_GET['nis']==""){
 
 $nis = $_GET['nis'];
 $db->select('pelanggaran','*',null,"idsiswa='$nis'",'tanggal desc');
-	$jum = $db->numRows(); if($jum<1){ eksyen('','?hal=pelanggaran'); }	// jika tidak ada pelanggaran dengan nis tersebut
+	//$jum = $db->numRows(); if($jum<1){ eksyen('','?hal=pelanggaran'); }	// jika tidak ada pelanggaran dengan nis tersebut
 $res = $db->getResult();
 ?>
 <div class="row">
 	<div class="col-lg-12">
-	    <h1 class="page-header">Detail Pelanggaran <small>| <a href="?hal=pelanggaran">Kembali</a></small></h1>
+	    <h1 class="page-header">Detail Pelanggaran <small>| <a href="?hal=<?=$_GET['ref'];?>">Kembali</a></small></h1>
 	</div>
 </div>
 <div class="row">
