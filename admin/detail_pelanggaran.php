@@ -35,16 +35,22 @@ $res = $db->getResult();
 				</tr>
 			</thead>
 			<tbody>
-			  <?php $i=1; foreach($res as $d){ ?>
+			  <?php $poin=0; $i=1; foreach($res as $d){ ?>
 				<tr>
 					<td class="text-center"><?=$i;?></td>
 					<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=TanggalIndo($d['tanggal']);?></td>
 					<td class="text-center">TR-0<?=$d['idtata'];?></td>
 					<td><?=konvert('tata',$d['idtata'],'nama');?></td>
-					<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
+					<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?><?php $poin = konvert('tata',$d['idtata'],'poin');?></td>
 				</tr>
-			  <?php $i++; } ?>
+			  <?php $i++; $poin=$poin+$poin; } ?>
 			</tbody>
+			<tfoot>
+				<tr class="info lead">
+					<td colspan="4" class="text-right">Total Poin</td>
+					<td class="text-center"><?=$poin;?></td>
+				</tr>
+			</tfoot>
 		</table>
 	</div>
 </div>
