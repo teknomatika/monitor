@@ -4,17 +4,18 @@
 <form action="" method="POST" class="form-inline" role="form">
 
 	<div class="form-group lead">
-		Pilih Tingkat
+		Pilih Tahun Pelajaran
 	</div>
 
 	<div class="form-group">
-		<label class="sr-only" for="">Tingkat</label>
-		<select name="kelas" id="inputKelas" class="form-control" required="required">
+		<label class="sr-only" for="">Tahun Pelajaran</label>
+		<select name="tapel" id="inputKelas" class="form-control" required="required">
 			<?php
-			$jb = array('X','XI','XII');
+			$db->select('tapel','*',null,"aktif='1'",'awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+			$jb = $db->getResult();
 			foreach($jb as $jb){
 			?>
-			<option value="<?=$jb;?>">Kelas <?=$jb;?></option>
+			<option value="<?=$jb['id'];?>">Tapel <?=$jb['awal'];?> / <?=$jb['akhir'];?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -23,15 +24,15 @@
 </form>
 
 <?php
-if(isset($_POST['tapel'])){
+if(isset($_POST['tapels'])){
 	$tapel = $db->escapeString($_POST['tapel']);
 
-	// cari kelas
+	// cari jurusan
 	$db->sql("select s.jurusan as jurusan from siswa s 
 				join tapel t on t.id=s.tapel
 				join kelas k on k.id=s.kelas
 				join jurusan j on j.id=s.jurusan
-				where t.id='$tapel' and t.aktif='1'
+				where t.id='$tapel' and t.aktif='1' and s.kelas like '$kelas %'
 				group by s.kelas
 				order by j.nama asc
 			");
