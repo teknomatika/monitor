@@ -10,7 +10,7 @@
 			<th>Jenis Pelanggaran</th>
 			<th class="col-lg-1 text-center">Poin</th>
 			<th class="col-lg-2 text-center">Waktu</th>
-			<th class="col-lg-1 text-center">#</th>
+			<!--<th class="col-lg-1 text-center">#</th>-->
 		</tr>
 	</thead>
 	<tbody>
@@ -28,7 +28,7 @@
 			<td><?=konvert('tata',$d['idtata'],'nama');?></td>
 			<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
 			<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=tanggal($d['tanggal']);?></td>
-			<td class="text-center"><?=tbl_ubah('?hal=pelanggaran&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=pelanggaran&act=hapus&id='.$d['id']);?></td>
+			<!--<td class="text-center"><?=tbl_hapus('?hal=pelanggaran&act=hapus&n='.$d['idsiswa'].'&id='.$d['id']);?></td>-->
 		</tr>
 		<?php } ?>
 	</tbody>
@@ -48,9 +48,12 @@
 				$idtata = $db->escapeString($_POST['idtata']);
 				$poin = $db->escapeString($_POST['poin']);
 				$waktu = "$tanggal ".date('H:i:s');
+				$uuid = id();
 
-				$q = $db->insert('pelanggaran',array('id'=>id(),'idsiswa'=>$nis,'idtata'=>$idtata,'tanggal'=>$waktu));
+				$q = $db->insert('pelanggaran',array('id'=>$uuid,'idsiswa'=>$nis,'idtata'=>$idtata,'tanggal'=>$waktu));
 				if($q){
+					hitungpoin($nis,$uuid,'tambah');
+					cektindak($nis);
 					eksyen('Data berhasil diinput','?hal=pelanggaran');
 				}else{
 					eksyen('Data gagal diinput','?hal=pelanggaran');
@@ -131,7 +134,7 @@
 			
 				<div class="form-group">
 					<div class="col-sm-9 col-sm-offset-3">
-						<button type="submit" class="btn btn-primary">Simpan</button>
+						<button type="submit" class="btn btn-primary" onClick="return confirm('Apakah Anda yakin akan melakukan aksi ini? Aksi ini tidak dapat dikembalikan.');">Simpan</button>
 						<button type="reset" class="btn btn-default">Reset</button>
 					</div>
 				</div>
@@ -145,11 +148,9 @@
 		case 'hapus':
 			echo '<h1 class="page-header">Ubah Data Pelanggaran</h1>Processing...';
 			$id = mysql_real_escape_string($_GET['id']);
-			if($_GET['a']==1){
-				$db->update('jurusan',array('aktif'=>'0'),"id='$id'"); 
-			}else{
-				$db->update('jurusan',array('aktif'=>'1'),"id='$id'"); 
-			}
+			$n = mysql_real_escape_string($_GET['n']);
+			hitungpoin($n,$id,'kurang');
+			$db->delete('pelanggaran',"id='$id'");
 			
 			$res = $db->getResult();
 			eksyen('','?hal=pelanggaran');

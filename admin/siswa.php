@@ -102,7 +102,7 @@
 				}else{
 					$q = $db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'buat'=>wkt()));
 					if($q){
-						//$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
+						$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
 						eksyen('Data berhasil diinput','?hal=siswa');
 					}else{
 						eksyen('Data gagal diinput','?hal=siswa');

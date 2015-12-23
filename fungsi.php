@@ -60,6 +60,56 @@ function laktif($id){
 	}
 }
 
+function hitungpoin($nis,$idpel,$opsi){
+	// ambil poin dari pelanggaran
+	$q = mysql_query("select t.poin as poin from pelanggaran p join tata t on t.id=p.idtata where p.id='$idpel'");
+	$d = mysql_fetch_array($q);
+	$poin = $d['poin'];
+
+	// tambah/kurangkan poin ke tabel poin berdasarkan nis
+	if($opsi=="tambah"){
+		mysql_query("update poin set poin=poin+'$poin', ubah=now() where nis='$nis'");
+	}elseif($opsi=="kurang"){
+		mysql_query("update poin set poin=poin-'$poin', ubah=now() where nis='$nis'");
+	}else{
+		eksyen('Salah Fungsi!','index.php');
+	}
+}
+
+function cekpoin($nis){
+	// munculkan
+	$qp = mysql_query("select poin from poin where nis='$nis'");
+	$dp = mysql_fetch_array($qp);
+	return $dp['poin'];
+}
+
+function cektindak($nis){
+
+	// cek masuk sanksi yang manakan ia
+	$poin = cekpoin($nis);
+
+	$q = mysql_query("select * from sanksi order by minimal desc");
+	while($d = mysql_fetch_array($q)){
+		$id = $d['id'];
+		$sql = "select true from sanksi where '$poin'>=minimal and '$poin'<=maksimal and id='$id'";
+		$q2 = mysql_query($sql);
+		$d2 = mysql_fetch_array($q2);
+		$cek = $d2['TRUE'];
+		if($cek == 1){
+			// input ke tabel tindak
+			mysql_query("insert into tindak(idsiswa,idsanksi,buat) values('$nis','$id',now())");
+		}
+	}
+}
+
+function belumtindak(){
+	$q = mysql_query("select * from tindak where tindak='0'");
+	$jum = mysql_num_rows($q);
+	if($jum>=1){
+		return "<span class=\"badge\">$jum</span>";
+	}
+}
+
 function angka(){
 	echo 'onkeypress="return isNumber(event)"';
 }
