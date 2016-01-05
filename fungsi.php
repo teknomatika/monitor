@@ -62,7 +62,7 @@ function laktif($id){
 
 function hitungpoin($nis,$idpel,$opsi){
 	// ambil poin dari pelanggaran
-	$q = mysql_query("select t.poin as poin from pelanggaran p join tata t on t.id=p.idtata where p.id='$idpel'");
+	$q = mysql_query("select t.poin as poin from pelanggaran p join tata_tertib t on t.id=p.idtata where p.id='$idpel'");
 	$d = mysql_fetch_array($q);
 	$poin = $d['poin'];
 
