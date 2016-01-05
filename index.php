@@ -104,6 +104,7 @@ $db->connect();
 							<input type="password" class="form-control" name="pass" placeholder="Password">
 						</div>
 						<button type="submit" class="btn btn-primary">Masuk</button>
+						<a href="?hal=lupa" class="btn btn-default">Lupa Password?</a>
 					</form>
 				<?php } ?>
 	            </div>

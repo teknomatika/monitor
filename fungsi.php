@@ -133,6 +133,12 @@ function cektindak($nis){
 	}
 }
 
+function jumsiswajurusan($jur){
+	$q = mysql_query("select count(id) as jumlah from siswa where jurusan='$jur'");
+	$d = mysql_fetch_array($q);
+	return $d['jumlah'];
+}
+
 function belumtindak(){
 	$q = mysql_query("select * from tindak where tindak='0'");
 	$jum = mysql_num_rows($q);

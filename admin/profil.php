@@ -5,8 +5,6 @@
 	if(isset($_POST['nama'])){
 		echo "Processing...";
 		$nama = mysql_real_escape_string($_POST['nama']);
-		$jk = mysql_real_escape_string($_POST['jk']);
-		$alamat = mysql_real_escape_string($_POST['alamat']);
 		$username = mysql_real_escape_string($_POST['username']);
 		$level = mysql_real_escape_string($_POST['level']);
 
@@ -17,7 +15,7 @@
 		}
 
 		// users
-		$q = $db->update('users',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'level'=>$level,'ubah'=>wkt()),'username="'.$_username.'"');
+		$q = $db->update('users',array('nama'=>$nama,'level'=>$level,'ubah'=>wkt()),'username="'.$_username.'"');
 		if($q){
 			eksyen('Data berhasil diubah','?hal=profil');
 		}else{
@@ -34,31 +32,6 @@
 		<label for="inputNama" class="col-sm-2 control-label">Nama Guru :</label>
 		<div class="col-sm-10">
 			<input type="text" name="nama" id="inputNama" class="form-control" value="<?=$d[0]['nama'];?>" required="required" maxlength="50">
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label for="inputNama" class="col-sm-2 control-label">Jenis Kelamin:</label>
-		<div class="col-sm-10">
-			<div class="radio">
-				<label>
-					<input type="radio" name="jk" id="inputJk" value="L" <?php cekbok($d[0]['jk'],'L');?>>
-					Laki-laki
-				</label>
-			</div>
-			<div class="radio">
-				<label>
-					<input type="radio" name="jk" id="inputJk" value="P" <?php cekbok($d[0]['jk'],'P');?>>
-					Perempuan
-				</label>
-			</div>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label for="inputTunjangan" class="col-sm-2 control-label">Alamat :</label>
-		<div class="col-sm-10">
-			<textarea name="alamat" id="inputAlamat" class="form-control" rows="3" required="required"><?=$d[0]['alamat'];?></textarea>
 		</div>
 	</div>
 

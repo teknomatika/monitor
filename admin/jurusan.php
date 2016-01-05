@@ -8,6 +8,7 @@
 			<th class="col-lg-1 text-center">No</th>
 			<th class="col-lg-1 text-center">Kode</th>
 			<th>Nama Jurusan</th>
+			<th class="col-lg-2 text-center">Jumlah Siswa</th>
 			<th class="col-lg-2 text-center">Status</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
@@ -25,6 +26,7 @@
 			<td class="text-center"><?=$i++;?></td>
 			<td class="text-center"><?=$d['kode_jurusan'];?></td>
 			<td><?=$d['nama'];?></td>
+			<td class="text-center"><?=jumsiswajurusan($d['id']);?> Siswa</td>
 			<td class="text-center"><?=($d['aktif']==1) ? "Aktif" : "Non-Aktif";?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=jurusan&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=jurusan&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
 		</tr>
