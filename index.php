@@ -72,7 +72,7 @@ $db->connect();
 	                  <ul class="dropdown-menu">
 	                    <li <?=aktif('laporan_kelas');?>><a href="?hal=laporan_kelas">Kelas</a></li>
 	                    <li <?=aktif('laporan_jurusan');?>><a href="?hal=laporan_jurusan">Jurusan</a></li>
-	                    <li <?=aktif('laporan_tingkat');?>><a href="?hal=laporan_tingkat">Tingkat</a></li>
+	                    <li <?=aktif('laporan_tingkat');?>><a href="#">Tingkat</a></li>
 	                    <li role="separator" class="divider"></li>
 	                    <!--li class="dropdown-header">Nav header</li-->
 	                    <li <?=aktif('laporan_monitoring');?>><a href="?hal=laporan_monitoring#header">Monitoring</a></li>
@@ -134,7 +134,7 @@ $db->connect();
 	          <div class="container">
 	            <div class="carousel-caption">
 	              <h1>Visi</h1>
-	              <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
+	              <p>Menjadi sekolah pilihan masyarakat dan menghasilkan lulusanyang dapat beradaptasi serta eksis di lingkungannya dan masyarakat global</p>
 	              <!--p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p-->
 	            </div>
 	          </div>
@@ -144,7 +144,15 @@ $db->connect();
 	          <div class="container">
 	            <div class="carousel-caption">
 	              <h1>Misi</h1>
-	              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+	              <p>Membekali peserta didik sehingga memiliki kompetensi yang meliputi :</p>
+	              <ol>
+	              	<li>Mengelola kemampuan diri dan orang lain</li>
+	              	<li>Keterampilan menyelesaikan pekerjaan dan tugas</li>
+	              	<li>Cakap berkomunikasi dan beradaptasi</li>
+	              	<li>Kemampuan memobilisasi inovasi dan perubahan</li>
+	              	<li>Tanggap terhadap IPTEK dan lingkungannya</li>
+	              	<li>Memiliki moral dan budi pekerti luhur berdasarkan agama</li>
+	              </ol>
 	            </div>
 	          </div>
 	        </div>
