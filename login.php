@@ -13,7 +13,7 @@ $db->select('users','*',NULL,"username='$user' and password='$md5pass'");
 $data = $db->getResult();
 
 if($data){
-    $db->update('users',array('terakhir_login'=>wkt()),"username='$user' and password='$md5pass'")
+    $db->update('users',array('terakhir_login'=>wkt()),"username='$user' and password='$md5pass'");
     $_SESSION['username'] = $data[0]['username'];
     $_SESSION['userid'] = $data[0]['id'];
     switch ($data[0]['level']) {
