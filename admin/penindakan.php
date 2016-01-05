@@ -56,6 +56,8 @@
 <div class="col-lg-12">
     <h1 class="page-header">Detail Tindakan <small>| <a href="?hal=penindakan">Kembali</a></small></h1>
 </div>
+<form action="" method="post">
+<fieldset <?php if($d['tindak']==1){echo "disabled";}?>>
 <table class="table">
 	<tbody>
 		<tr>
@@ -74,7 +76,6 @@
 			<td>Sanksi</td>
 			<td><?=konvert('sanksi',$d['idsanksi'],'nama');?></td>
 		</tr>		
-		<form action="" method="post">
 			<input type="hidden" name="idtindak" id="inputIdtindak" class="form-control" value="<?=$id;?>">
 		<tr>
 			<td>Status</td>
@@ -97,9 +98,10 @@
 			<td></td>
 			<td><button type="submit" class="btn btn-primary">Simpan</button> <a href="?hal=penindakan" class="btn btn-default">Batal</a></td>
 		</tr>
-		</form>
 	</tbody>
 </table>
+</fieldset>
+</form>
 
 <?php 
 	}

@@ -14,8 +14,11 @@ $res = $db->getResult();
 	</div>
 </div>
 <div class="row">
-	<div class="col-lg-4 col-lg-offset-5 lead">
-		<?=$nis;?> <br> <?=konvert2('siswa','nis',$nis,'nama');?>
+	<div class="col-lg-5 text-right lead">
+		NIS:<br>Nama Siswa:<br>Nama Orang Tua:<br>No HP Orang Tua:
+	</div>
+	<div class="col-lg-4 lead">
+		<?=$nis;?><br><?=konvert2('siswa','nis',$nis,'nama');?><br><?=konvert2('siswa','nis',$nis,'nama_ortu');?><br><?=konvert2('siswa','nis',$nis,'hp_ortu');?>
 	</div>
 	<div class="col-lg-3">
 		<img src="<?=konvert2('siswa','nis',$nis,'foto');?>" height="150">

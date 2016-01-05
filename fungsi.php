@@ -33,9 +33,9 @@ function getnis($jur){
 	$thn = date('y');
 
 	// menentukan kode jurusan
-	$jur = konvert('jurusan',$jur,'kode');
+	$juru = konvert('jurusan',$jur,'kode');
 
-	return $thn.$jur.$id;	
+	return $thn.$juru.$id;	
 }
 
 function hom(){

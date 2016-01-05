@@ -67,7 +67,7 @@ $db->connect();
 	                <li <?=aktif('sanksi');?>><a href="?hal=sanksi">Sanksi</a></li>
 	                <li <?=aktif('pelanggaran');?><?=aktif('detail_pelanggaran');?>><a href="?hal=pelanggaran">Pelanggaran</a></li>
 	                <li <?=aktif('penindakan');?><?=aktif('detail_peringatan');?>><a href="?hal=penindakan">Peringatan <?=belumtindak();?></a></li>
-	                <li class="dropdown<?=laktif('laporan_kelas');?><?=laktif('laporan_jurusan');?><?=laktif('laporan_tingkat');?>">
+	                <li class="dropdown<?=laktif('laporan_kelas');?><?=laktif('laporan_jurusan');?><?=laktif('laporan_tingkat');?><?=laktif('laporan_monitoring');?>">
 	                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Laporan <span class="caret"></span></a>
 	                  <ul class="dropdown-menu">
 	                    <li <?=aktif('laporan_kelas');?>><a href="?hal=laporan_kelas">Kelas</a></li>
@@ -75,7 +75,7 @@ $db->connect();
 	                    <li <?=aktif('laporan_tingkat');?>><a href="?hal=laporan_tingkat">Tingkat</a></li>
 	                    <li role="separator" class="divider"></li>
 	                    <!--li class="dropdown-header">Nav header</li-->
-	                    <li><a href="?hal=siswa">Monitoring</a></li>
+	                    <li <?=aktif('laporan_monitoring');?>><a href="?hal=laporan_monitoring#header">Monitoring</a></li>
 	                  </ul>
 	                </li>
 	                <li class="dropdown">
@@ -169,7 +169,7 @@ $db->connect();
 	                responsive: true
 	        });
 
-	        $( "#datepicker" ).datepicker({
+	        $( "#datepicker,#datepicker2" ).datepicker({
 	        	changeYear: true,
 	        	changeMonth: true,
 	        	dateFormat:"yy-mm-dd"
@@ -196,7 +196,7 @@ $db->connect();
 	        	<?php
 	        	$db = new Database();
 				$db->connect();
-				$db->select('tata','id');	// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+				$db->select('tata_tertib','id');	// Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 				$res = $db->getResult();
 				foreach ($res as $d) {
 					echo "\"".$d['id']."\",";

@@ -24,7 +24,7 @@
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
 			<td class="text-center"><?=$d['nama'];?></td>
-			<td><?=$d['wali'];?></td>
+			<td><?=$d['wali_kelas'];?></td>
 			<td class="text-center"><?=($d['aktif']==0) ? 'Non-Aktif' : 'Aktif';?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=kelas&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=kelas&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
 		</tr>
@@ -55,10 +55,10 @@
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('kelas',array('nama'=>$nama,'wali'=>$wali,'ubah'=>wkt()),'id="'.$id.'"');
+					$db->update('kelas',array('nama'=>$nama,'wali_kelas'=>$wali,'ubah'=>wkt()),'id="'.$id.'"');
 					eksyen('Data berhasil diubah','?hal=kelas');
 				}else{
-					$db->insert('kelas',array('nama'=>$nama,'wali'=>$wali,'buat'=>wkt()));
+					$db->insert('kelas',array('nama'=>$nama,'wali_kelas'=>$wali,'buat'=>wkt()));
 					$res = $db->getResult();
 					eksyen('Data berhasil diinput','?hal=kelas');
 				}
@@ -79,7 +79,7 @@
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-2 control-label">Wali Kelas :</label>
 					<div class="col-sm-10">
-						<input type="text" name="wali" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['wali'];?>"<?php } ?> required="required" maxlength="100">
+						<input type="text" name="wali" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['wali_kelas'];?>"<?php } ?> required="required" maxlength="100">
 					</div>
 				</div>
 			

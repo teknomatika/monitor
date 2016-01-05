@@ -11,11 +11,11 @@
 		<label class="sr-only" for="">Tahun Pelajaran</label>
 		<select name="tapel" id="inputKelas" class="form-control" required="required">
 			<?php
-			$db->select('tapel','*',null,"aktif='1'",'awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+			$db->select('tapel','*',null,"aktif='1'",'tapel_awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 			$jb = $db->getResult();
 			foreach($jb as $jb){
 			?>
-			<option value="<?=$jb['id'];?>">Tapel <?=$jb['awal'];?> / <?=$jb['akhir'];?></option>
+			<option value="<?=$jb['id'];?>">Tapel <?=$jb['tapel_awal'];?> / <?=$jb['tapel_akhir'];?></option>
 			<?php } ?>
 		</select>
 	</div>
@@ -24,7 +24,7 @@
 </form>
 
 <?php
-if(isset($_POST['tapels'])){
+if(isset($_POST['tapel'])){
 	$tapel = $db->escapeString($_POST['tapel']);
 
 	// cari jurusan
@@ -58,11 +58,11 @@ if(isset($_POST['tapels'])){
 	}else{
 ?>
 <div class="col-lg-10 col-lg-offset-1">
-	<h3 class="text-center">Grafik <br>Angkatan <?=konvert('tapel',$tapel,'awal');?>/<?=konvert('tapel',$tapel,'akhir');?></h3>
+	<h3 class="text-center">Grafik <br>Angkatan <?=konvert('tapel',$tapel,'tapel_awal');?>/<?=konvert('tapel',$tapel,'tapel_akhir');?></h3>
 	<canvas id="myChart" heigth="400"></canvas>
 </div>
 <div class="col-lg-10 col-lg-offset-1">
-	<h3 class="text-center">Tabel <br>Angkatan <?=konvert('tapel',$tapel,'awal');?>/<?=konvert('tapel',$tapel,'akhir');?></h3>
+	<h3 class="text-center">Tabel <br>Angkatan <?=konvert('tapel',$tapel,'tapel_awal');?>/<?=konvert('tapel',$tapel,'tapel_akhir');?></h3>
 	<table class="table table-condensed table-bordered">
 		<thead>
 			<tr>

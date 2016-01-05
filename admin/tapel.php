@@ -22,7 +22,7 @@
 		?>
 		<tr>
 			<td class="text-center"><?=$i++;?></td>
-			<td><?=$d['awal'];?> / <?=$d['akhir'];?></td>
+			<td><?=$d['tapel_awal'];?> / <?=$d['tapel_akhir'];?></td>
 			<td class="text-center"><?=($d['aktif']==1) ? "Aktif" : "Non-Aktif";?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=tapel&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=tapel&act=hapus&a='.$d['aktif'].'&id='.$d['id']);?></td>
 		</tr>
@@ -53,10 +53,10 @@
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$db->update('tapel',array('awal'=>$awal,'akhir'=>$akhir),'id="'.$id.'"');
+					$db->update('tapel',array('tapel_awal'=>$awal,'tapel_akhir'=>$akhir),'id="'.$id.'"');
 					eksyen('Data berhasil diubah','?hal=tapel');
 				}else{
-					$db->insert('tapel',array('awal'=>$awal,'akhir'=>$akhir));
+					$db->insert('tapel',array('tapel_awal'=>$awal,'tapel_akhir'=>$akhir));
 					$res = $db->getResult();
 					eksyen('Data berhasil diinput','?hal=tapel');
 				}
@@ -70,7 +70,7 @@
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-2 control-label">Tahun Pelajaran :</label>
 					<div class="col-sm-3">
-						<input type="text" name="awal" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['awal'];?>"<?php } ?> required="required" maxlength="4" <?=angka();?>>
+						<input type="text" name="awal" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['tapel_awal'];?>"<?php } ?> required="required" maxlength="4" <?=angka();?>>
 					</div>
 				</div>
 			

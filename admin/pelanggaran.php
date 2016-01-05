@@ -7,7 +7,7 @@
 		<tr>
 			<th class="col-lg-1 text-center">No</th>
 			<th>Nama Siswa</th>
-			<th>Jenis Pelanggaran</th>
+			<th class="col-lg-2 text-center">Jumlah Pelanggaran</th>
 			<th class="col-lg-1 text-center">Poin</th>
 			<th class="col-lg-2 text-center">Waktu</th>
 			<!--<th class="col-lg-1 text-center">#</th>-->
@@ -18,15 +18,16 @@
 		$i = 1;
 		$db = new Database();
 		$db->connect();
-		$db->select('pelanggaran','*',null,null,'tanggal desc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		//$db->select('pelanggaran','*',null,null,'tanggal desc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+		$db->sql("select * from pelanggaran group by idsiswa order by tanggal desc");
 		$res = $db->getResult();
 		foreach($res as $d){
 		?>
-		<tr>
+		<tr class="<?php if(cekpoin($d['idsiswa'])>=1 and cekpoin($d['idsiswa'])<=30){ echo "info";}elseif(cekpoin($d['idsiswa'])>=31 and cekpoin($d['idsiswa'])<=70){ echo "warning";}elseif(cekpoin($d['idsiswa'])>=71 and cekpoin($d['idsiswa'])<=100){ echo "danger";} ?>">
 			<td class="text-center"><?=$i++;?></td>
-			<td class="text-center"><a href="?hal=detail_pelanggaran&nis=<?=$d['idsiswa'];?>&ref=<?=$_GET['hal'];?>"><?=konvert2('siswa','nis',$d['idsiswa'],'nama');?></a></td>
-			<td><?=konvert('tata',$d['idtata'],'nama');?></td>
-			<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?></td>
+			<td><a href="?hal=detail_pelanggaran&nis=<?=$d['idsiswa'];?>&ref=<?=$_GET['hal'];?>"><?=konvert2('siswa','nis',$d['idsiswa'],'nama');?></a></td>
+			<td class="text-center"><?=cekpelanggaran($d['idsiswa']);?></td>
+			<td class="text-center"><?=cekpoin($d['idsiswa']);?></td>
 			<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=TanggalIndo($d['tanggal']);?></td>
 			<!--<td class="text-center"><?=tbl_hapus('?hal=pelanggaran&act=hapus&n='.$d['idsiswa'].'&id='.$d['id']);?></td>-->
 		</tr>

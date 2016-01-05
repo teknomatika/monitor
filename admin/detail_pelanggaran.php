@@ -14,8 +14,11 @@ $res = $db->getResult();
 	</div>
 </div>
 <div class="row">
-	<div class="col-lg-4 col-lg-offset-5 lead">
-		<?=$nis;?> <br> <?=konvert2('siswa','nis',$nis,'nama');?>
+	<div class="col-lg-5 text-right lead">
+		NIS:<br>Nama Siswa:<br>Nama Orang Tua:<br>No HP Orang Tua:
+	</div>
+	<div class="col-lg-4 lead">
+		<?=$nis;?><br><?=konvert2('siswa','nis',$nis,'nama');?><br><?=konvert2('siswa','nis',$nis,'nama_ortu');?><br><?=konvert2('siswa','nis',$nis,'hp_ortu');?>
 	</div>
 	<div class="col-lg-3">
 		<img src="<?=konvert2('siswa','nis',$nis,'foto');?>" height="150">
@@ -36,12 +39,12 @@ $res = $db->getResult();
 			</thead>
 			<tbody>
 			  <?php $poin=0; $i=1; foreach($res as $d){ ?>
-				<tr>
+				<tr class="<?php if(konvert('tata_tertib',$d['idtata'],'jenis')=='Ringan'){echo "info";}elseif(konvert('tata_tertib',$d['idtata'],'jenis')=='Sedang'){echo "warning";}elseif(konvert('tata_tertib',$d['idtata'],'jenis')=='Berat'){echo "danger";} ?>">
 					<td class="text-center"><?=$i;?></td>
 					<td class="text-center" title="<?=time_ago($d['tanggal']);?>"><?=TanggalIndo($d['tanggal']);?></td>
 					<td class="text-center">TR-0<?=$d['idtata'];?></td>
-					<td><?=konvert('tata',$d['idtata'],'nama');?></td>
-					<td class="text-center"><?=konvert('tata',$d['idtata'],'poin');?><?php $poin = konvert('tata',$d['idtata'],'poin');?></td>
+					<td><?=konvert('tata_tertib',$d['idtata'],'nama');?></td>
+					<td class="text-center"><?=konvert('tata_tertib',$d['idtata'],'poin');?><?php $poin = konvert('tata_tertib',$d['idtata'],'poin');?></td>
 				</tr>
 			  <?php $i++; $poin=$poin+$poin; } ?>
 			</tbody>

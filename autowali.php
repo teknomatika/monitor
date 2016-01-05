@@ -9,6 +9,6 @@ $db->select('siswa','*',null,"nis='$nis'");	// Table name, Column Names, JOIN, W
 $res = $db->getResult();
 
 foreach ($res as $d) {
-	echo konvert('kelas',$d['kelas'],'wali');
+	echo konvert('kelas',$d['kelas'],'wali_kelas');
 }
 ?>

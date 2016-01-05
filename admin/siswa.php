@@ -2,14 +2,14 @@
 <div class="col-lg-12">
     <h1 class="page-header">Master Data Siswa <?=tbl_tambah('Input Data Siswa','?hal=siswa&act=ubah');?></h1>
 </div>
-<table class="table table-hover table-bordered" id="tbl">
+<table class="table table-hover table-bordered" id="tbl2">
 	<thead>
 		<tr>
 			<th class="col-lg-1 text-center">No</th>
 			<th class="col-lg-2 text-center">NIS</th>
 			<th>Nama Siswa</th>
 			<th class="col-lg-3 text-center">Jurusan</th>
-			<th class="col-lg-2 text-center">Kelas (Tapel)</th>
+			<th class="col-lg-2 text-center">Kelas</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
 	</thead>
@@ -27,7 +27,7 @@
 			<td class="text-center"><?=$d['nis'];?></td>
 			<td><?=$d['nama'];?></td>
 			<td class="text-center"><?=konvert('jurusan',$d['jurusan'],'nama');?></td>
-			<td class="text-center"><?=konvert('kelas',$d['kelas'],'nama');?> (<?=konvert('tapel',$d['tapel'],'awal');?> / <?=konvert('tapel',$d['tapel'],'awal')+1;?>)</td>
+			<td class="text-center"><?=konvert('kelas',$d['kelas'],'nama');?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=siswa&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=siswa&act=hapus&id='.$d['id']);?></td>
 		</tr>
 		<?php } ?>
@@ -59,48 +59,51 @@
 				$kelas = mysql_real_escape_string($_POST['kelas']);
 				$alamat = mysql_real_escape_string($_POST['alamat']);
 				$tapel = mysql_real_escape_string($_POST['tapel']);
+				$nama_ortu = mysql_real_escape_string($_POST['nama_ortu']);
+				$hp_ortu = mysql_real_escape_string($_POST['hp_ortu']);
 
 				// cari NIM
 				$nis = getnis($jurusan);
 				// end of cari NIM
 
-				// foto siswa
-				if($_FILES['foto']['name']!=""){				// kalau tidak kosong, maka dijalankan
-					$tmp_name  = $_FILES['foto']['tmp_name']; 	//nama local temp file di server
-				    $file_type = $_FILES['foto']['type'];
-				    $img_name = $_FILES['foto']['name'];
-				    $tipe = array("image/jpeg","image/png","image/gif");
-				        if(!in_array($file_type, $tipe)) eksyen('Improper File Type for Photo. Use JPEG/JPG/PNG/GIF only.','?=hal=siswa');
-
-			      	// hapus foto jika sudah ada
-			        $db->select('siswa','foto',NULL,"id='$id'",null);
-			        $f = $db->getResult();
-			        foreach ($f as $f) {
-			        	if($f['foto']!=""){
-			        		unlink("".$f['foto']);
-			        	}
-			        }
-
-			        // upload foto ke images/fotosiswa
-			        $dir = "images/fotosiswa/".$_nis."-".$img_name;
-			        if(move_uploaded_file($tmp_name, $dir)){
-			        	echo "<b>Upload Foto sukses!</b>";
-			        	$db->update('siswa',array('foto'=>$dir),'id="'.$id.'"');
-			        }else{
-			        	echo "<b>Upload Foto gagal!</b>";
-			        }
-				}
-
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
-					$q = $db->update('siswa',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'ubah'=>wkt()),'id="'.$id.'"');
+					$q = $db->update('siswa',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'nama_ortu'=>$nama_ortu,'hp_ortu'=>$hp_ortu,'ubah'=>wkt()),'id="'.$id.'"');
 					if($q){
+
+						// foto siswa
+						if($_FILES['foto']['name']!=""){				// kalau tidak kosong, maka dijalankan
+							$tmp_name  = $_FILES['foto']['tmp_name']; 	//nama local temp file di server
+						    $file_type = $_FILES['foto']['type'];
+						    $img_name = $_FILES['foto']['name'];
+						    $tipe = array("image/jpeg","image/png","image/gif");
+						        if(!in_array($file_type, $tipe)) eksyen('Improper File Type for Photo. Use JPEG/JPG/PNG/GIF only.','?=hal=siswa');
+
+					      	// hapus foto jika sudah ada
+					        $db->select('siswa','foto',NULL,"id='$id'",null);
+					        $f = $db->getResult();
+					        foreach ($f as $f) {
+					        	if($f['foto']!=""){
+					        		unlink("".$f['foto']);
+					        	}
+					        }
+
+					        // upload foto ke images/fotosiswa
+					        $dir = "images/fotosiswa/".$_nis."-".$img_name;
+					        if(move_uploaded_file($tmp_name, "../".$dir)){
+					        	echo "<b>Upload Foto sukses!</b>";
+					        	$db->update('siswa',array('foto'=>$dir),'id="'.$id.'"');
+					        }else{
+					        	echo "<b>Upload Foto gagal!</b>";
+					        }
+						}
+
 						eksyen('Data berhasil diubah','?hal=siswa');
 					}else{
 						eksyen('Data gagal diubah','?hal=siswa');
 					}
 				}else{
-					$q = $db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'buat'=>wkt()));
+					$q = $db->insert('siswa',array('nama'=>$nama,'nis'=>$nis,'jk'=>$jk,'alamat'=>$alamat,'tempat'=>$tempat,'tanggal'=>$tanggal,'jurusan'=>$jurusan,'kelas'=>$kelas,'tapel'=>$tapel,'nama_ortu'=>$nama_ortu,'hp_ortu'=>$hp_ortu,'buat'=>wkt()));
 					if($q){
 						$db->insert('poin',array('nis'=>$nis,'poin'=>'0','ubah'=>wkt()));
 						eksyen('Data berhasil diinput','?hal=siswa');
@@ -126,7 +129,7 @@
 				<div class="form-group">
 					<label for="inputNama" class="col-sm-2 control-label">Nama Siswa :</label>
 					<div class="col-sm-10">
-						<input type="text" name="nama" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama'];?>"<?php } ?> required="required" maxlength="25">
+						<input type="text" name="nama" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama'];?>"<?php } ?> required="required" maxlength="50">
 					</div>
 				</div>
 
@@ -196,13 +199,20 @@
 					<div class="col-sm-5">
 						<select name="tapel" id="inputKelas" class="form-control" required="required">
 							<?php
-							$db->select('tapel','*',null,"aktif='1'",'awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+							$db->select('tapel','*',null,"aktif='1'",'tapel_awal asc'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
 							$jb = $db->getResult();
 							foreach($jb as $jb){
 							?>
-							<option value="<?=$jb['id'];?>" <?php if(isset($_GET['id'])){ selek($d[0]['tapel'],$jb['id']); }else{ ?>selected<?php } ?>><?=$jb['awal'];?> / <?=$jb['akhir'];?></option>
+							<option value="<?=$jb['id'];?>" <?php if(isset($_GET['id'])){ selek($d[0]['tapel'],$jb['id']); }else{ ?>selected<?php } ?>><?=$jb['tapel_awal'];?> / <?=$jb['tapel_akhir'];?></option>
 							<?php } ?>
 						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputHP" class="col-sm-2 control-label">Wali Kelas :</label>
+					<div class="col-sm-10">
+						<p class="form-control-static"><?=konvert('kelas',$d[0]['kelas'],'wali_kelas');?></p>
 					</div>
 				</div>
 
@@ -210,6 +220,20 @@
 					<label for="inputFoto" class="col-sm-2 control-label">Foto Siswa :</label>
 					<div class="col-sm-10">
 						<input type="file" name="foto" id="inputFoto">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputNamaO" class="col-sm-2 control-label">Nama Orang Tua :</label>
+					<div class="col-sm-10">
+						<input type="text" name="nama_ortu" id="inputNamaO" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama_ortu'];?>"<?php } ?> required="required" maxlength="50">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputHP" class="col-sm-2 control-label">No.HP Orang Tua :</label>
+					<div class="col-sm-10">
+						<input type="text" name="hp_ortu" id="inputHP" class="form-control" value="<?=$d[0]['hp_ortu'];?>" <?=angka();?> required maxlength="12">
 					</div>
 				</div>
 			

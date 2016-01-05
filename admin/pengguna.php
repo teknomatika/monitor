@@ -7,7 +7,8 @@
 		<tr>
 			<th class="col-lg-1 text-center">No</th>
 			<th class="col-lg-2 text-center">Username</th>
-			<th colspan="2">Nama Guru</th>
+			<th>Nama Guru</th>
+			<th class="col-lg-3 text-center">Jurusan</th>
 			<th class="col-lg-2 text-center">Level</th>
 			<th class="col-lg-1 text-center">#</th>
 		</tr>
@@ -25,7 +26,7 @@
 			<td class="text-center"><?=$i++;?></td>
 			<td class="text-center"><?=$d['username'];?></td>
 			<td><?=$d['nama'];?></td>
-			<td class="col-lg-2 text-center"><?=($d['jk']=="L") ? "Laki-laki" : "Perempuan";?></td>
+			<td class="text-center"><?=konvert('jurusan',$d['jurusan'],'nama');?></td>
 			<td class="text-center"><?=$d['level'];?></td>
 			<td class="text-center"><?=tbl_ubah('?hal=pengguna&act=ubah&id='.$d['id']);?> <?=tbl_hapus('?hal=pengguna&act=hapus&id='.$d['id']);?></td>
 		</tr>
@@ -50,10 +51,9 @@
 			if(isset($_POST['nama'])){
 				echo "Processing...";
 				$nama = mysql_real_escape_string($_POST['nama']);
-				$jk = mysql_real_escape_string($_POST['jk']);
-				$alamat = mysql_real_escape_string($_POST['alamat']);
 				$username = mysql_real_escape_string($_POST['username']);
 				$level = mysql_real_escape_string($_POST['level']);
+				$jurusan = mysql_real_escape_string($_POST['jurusan']);
 
 				if(isset($_POST['id'])){
 					$id = mysql_real_escape_string($_POST['id']);
@@ -65,7 +65,7 @@
 					}
 
 					// users
-					$q = $db->update('users',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'level'=>$level,'ubah'=>wkt()),'id="'.$id.'"');
+					$q = $db->update('users',array('nama'=>$nama,'level'=>$level,'jurusan'=>$jurusan),'id="'.$id.'"');
 					if($q){
 						eksyen('Data berhasil diubah','?hal=pengguna');
 					}else{
@@ -73,7 +73,7 @@
 					}
 				}else{
 					$password = md5(mysql_real_escape_string($_POST['password']));
-					$q = $db->insert('users',array('nama'=>$nama,'jk'=>$jk,'alamat'=>$alamat,'level'=>$level,'username'=>$username,'password'=>$password,'buat'=>wkt()));
+					$q = $db->insert('users',array('nama'=>$nama,'level'=>$level,'jurusan'=>$jurusan,'username'=>$username,'password'=>$password,'tanggal_registrasi'=>wkt()));
 					if($q){
 						eksyen('Data berhasil diinput','?hal=pengguna');
 					}else{
@@ -91,31 +91,6 @@
 					<label for="inputNama" class="col-sm-2 control-label">Nama Guru :</label>
 					<div class="col-sm-10">
 						<input type="text" name="nama" id="inputNama" class="form-control" <?php if(isset($_GET['id'])){ ?>value="<?=$d[0]['nama'];?>"<?php } ?> required="required" maxlength="50">
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="inputNama" class="col-sm-2 control-label">Jenis Kelamin:</label>
-					<div class="col-sm-10">
-						<div class="radio">
-							<label>
-								<input type="radio" name="jk" id="inputJk" value="L" <?php if(isset($_GET['id'])){ cekbok($d[0]['jk'],'L'); }else{ ?>checked="checked"<?php } ?>>
-								Laki-laki
-							</label>
-						</div>
-						<div class="radio">
-							<label>
-								<input type="radio" name="jk" id="inputJk" value="P" <?php if(isset($_GET['id'])){ cekbok($d[0]['jk'],'P'); }?>>
-								Perempuan
-							</label>
-						</div>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="inputTunjangan" class="col-sm-2 control-label">Alamat :</label>
-					<div class="col-sm-10">
-						<textarea name="alamat" id="inputAlamat" class="form-control" rows="3" required="required"><?php if(isset($_GET['id'])){ ?><?=$d[0]['alamat'];?><?php } ?></textarea>
 					</div>
 				</div>
 
@@ -150,6 +125,21 @@
 								Kepala Sekolah
 							</label>
 						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputJurusan" class="col-sm-2 control-label">Jurusan:</label>
+					<div class="col-sm-10">
+						<select name="jurusan" id="inputJurusan" class="form-control" required="required">
+							<?php
+							$db->select('jurusan'); // Table name, Column Names, JOIN, WHERE conditions, ORDER BY conditions
+							$jb = $db->getResult();
+							foreach($jb as $jb){
+							?>
+							<option value="<?=$jb['id'];?>" <?php if(isset($_GET['id'])){ selek($d[0]['jurusan'],$jb['id']); }else{ ?>selected<?php } ?>><?=$jb['nama'];?></option>
+							<?php } ?>
+						</select>
 					</div>
 				</div>
 			
